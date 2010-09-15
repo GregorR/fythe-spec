@@ -1,85 +1,108 @@
 Name        AC  Types*      Notes
 
 Objects:
-This        0
-ThisSet     1
-Null        0
-Global      0
-Version     0   →a          (various platform-specific version info)
-New         0
-Member      2   os
-MemberSet   3   oso
-Parent      1
-ParentSet   2
-Members     1
-Equal       2               (2-code)
+This            0
+ThisSet         1
+Null            0
+Global          0
+Version         0   →a          (various platform-specific version info)
+New             0
+Member          2   os
+MemberSet       3   oso
+Parent          1
+ParentSet       2
+Members         1
+Equal           2               (2-code)
+
+Type detection**:
+ValidArray      1   →i
+ValidString     1   →i
+ValidFunction   1   →i
+ValidInteger    1   →i
+ValidFloat      1   →i
 
 Function/stack:
-Call        2   co
-Throw       1               (no output)
-Catch       0               (2-code)
+Call            2   co
+Throw           1               (no output)
+Catch           0               (2-code)
 
 Behavioral:
-While       0               (2-code)
+While           0               (2-code)
 
 Primitives:
-Associate   2   po→p
-Dissociate  1   p→o
+Associate       2   po→p
+Dissociate      1   p→o
 
 Strings:
-SConcat     2   ss→s
-SLength     1   s→i
-SSlice      3   sii→s
-SEqual      2   ss          (2-code)
+SConcat         2   ss→s
+SLength         1   s→i
+SSlice          3   sii→s
+SEqual          2   ss          (2-code)
 
 Arrays:
-Array       variable        (FIXME: can't handle variable anywhere else, maybe bad)
-AConcat     2   aa
-ALength     1   a→i
-AIndex      2   ai
-AIndexSet   3   aio
-NullArray   1   i
-ASlice      3   aii→a
+Array           variable        (FIXME: can't handle variable anywhere else, maybe bad)
+AConcat         2   aa
+ALength         1   a→i
+AIndex          2   ai
+AIndexSet       3   aio
+NullArray       1   i
+ASlice          3   aii→a
 
 Integers:
-IWidth      0   →i
-IMul        2   ii→i
-IDiv        2   ii→i
-IMod        2   ii→i
-IAdd        2   ii→i
-ISub        2   ii→i
-ISl         2   ii→i
-ISr         2   ii→i
-IOr         2   ii→i
-INor        2   ii→i
-IXor        2   ii→i
-INxor       2   ii→i
-IAnd        2   ii→i
-INand       2   ii→i
-IByte       1   i→s
-IEqual      2   ii          (2-code)
-INe         2   ii          (2-code)
-ILt         2   ii          (2-code)
-ILte        2   ii          (2-code)
-IGt         2   ii          (2-code)
-IGte        2   ii          (2-code)
+IWidth          0   →i
+IMul            2   ii→i
+IDiv            2   ii→i
+IMod            2   ii→i
+IAdd            2   ii→i
+ISub            2   ii→i
+ISl             2   ii→i
+ISr             2   ii→i
+IOr             2   ii→i
+INor            2   ii→i
+IXor            2   ii→i
+INxor           2   ii→i
+IAnd            2   ii→i
+INand           2   ii→i
+IByte           1   i→s
+IEqual          2   ii          (2-code)
+INe             2   ii          (2-code)
+ILt             2   ii          (2-code)
+ILte            2   ii          (2-code)
+IGt             2   ii          (2-code)
+IGte            2   ii          (2-code)
 
 All the same for floats with F except Sl and Sr
 
 Runtime:
 Include     1   s→s         (or a throw for failure)
 
-* Types are in the form input→output. Either input or output may be disregarded
+*
+  Types are in the form input→output. Either input or output may be disregarded
   if any sort of object is OK. 'input' is a string of letters, each of which is
   one of:
     o: Any object
     a: Array
     s: String
+    c: Code (function)
     i: Integer
     f: Float
-    c: Code (function)
     p: Any primitive (a, s, i or f)
+
+**
+  Type detection returns an integer (0 for false, 1 for true). A positive
+  response does NOT indicate that there is actually an associated primitive of
+  that type, it only indicates that attempting to use the value as that type
+  will not cause the interpreter to crash; this is to make ambiguity in how
+  primitives are stored acceptable such that implementations don't need too
+  much tagging.
 
 FIXME:
 Resolve
 
+
+
+Values in Fythe are a mandatory object associated with an optional primitive.
+Note that associating a primitive with an object will NOT cause all instances
+of that object to be associated with that primitive, it's purely a local
+change. However, object-primitive pairs move together, and will not become
+dissociated unless you explicitly dissociate.
