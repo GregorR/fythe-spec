@@ -106,3 +106,28 @@ Note that associating a primitive with an object will NOT cause all instances
 of that object to be associated with that primitive, it's purely a local
 change. However, object-primitive pairs move together, and will not become
 dissociated unless you explicitly dissociate.
+
+
+
+x86 ABI:
+EAX = Returns (as in C)
+EBX = (This) (object part)
+ECX = (This) (primitive part)
+EDX = Pointer to an array of major constants, e.g. (Global), (Version) and
+      major implementation functions, plus a pointer to the exception stack.
+ESI = Stack of Fythe values
+EDI = Pointer to array of Fythe "registers"
+EBP = C base pointer (as in C)
+ESP = C stack pointer (as in C)
+
+Before calling a Fythe function, you must push (This) and any Fythe registers
+that are in use. Before calling a C function, you must push all processor
+registers, but no Fythe registers.
+
+x86_64 ABI:
+Same as x86 (swap 'E' for 'R'), but R8-R15 are the first four Fythe registers
+(e.g. R8 is FR0.o, R9 is FR0.p)
+
+Before calling a Fythe function, you must push (This) and any Fythe registers
+that are in use. Before calling a C function, you must push all processor
+registers, but no Fythe registers >3.
