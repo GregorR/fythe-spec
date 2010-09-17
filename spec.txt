@@ -59,6 +59,7 @@ IAdd            2   ii→i
 ISub            2   ii→i
 ISl             2   ii→i
 ISr             2   ii→i
+INot            1   i→i
 IOr             2   ii→i
 INor            2   ii→i
 IXor            2   ii→i
@@ -86,6 +87,7 @@ MContains       3   ois→i
 Threading (optional, exists if "threads" in (Version)):
 Spawn           2   co→t
 Join            1   t           (FIXME: what's the return?)
+Yield           0               (always returns (Null))
 LMutexNew       0   →l
 LMutexLock      1   l→l
 LMutexTryLock   1   l→i
@@ -103,7 +105,8 @@ LRWRLock        1   l→l
 LRWRTryLock     1   l→i
 LRWRUnlock      1   l→l
 LRWDestroy      1   l→o         (always returns (Null))
-Cas             3   oio
+Cas             4   oioo→i      (only compares and swaps the object, not the primitive)
+PCas            4   oipp→i      (only compares and swaps the primitive, not the object)
 
 Runtime:
 Include         1   s→s         (or a throw for failure)

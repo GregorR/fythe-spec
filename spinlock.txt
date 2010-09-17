@@ -1,0 +1,16 @@
+This is a simple implementation of spinlocks with only Cas that require no
+allocation (good for monitors on objects):
+
+(SpinLock.Init obj idx)                 => (Seq (Seq (TempSet *0 obj) (TempSet *1 obj))
+                                            (MemberSet (Temp *0) (Temp *1)
+                                             (Associate 0 (Member (Temp *0) (Temp *1)))
+                                            )
+                                           )
+(SpinLock.TryLock obj idx)              => (PCas obj idx 0 1)
+(SpinLock.Lock obj idx)                 => (Seq (Seq (TempSet *0 obj) (TempSet *1 obj))
+                                            (While
+                                             (INot (SpinLock.TryLock (Temp *0) (Temp *1)))
+                                             (Yield)
+                                            )
+                                           )
+(SpinLock.Unlock obj idx)               => (MemberSet obj idx (Associate 0 (Null)))
