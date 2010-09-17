@@ -1,21 +1,27 @@
-Name        AC  Types*      Notes
+Name            AC  Types*      Notes
 
 Objects:
 This            0
 ThisSet         1
+Arg             0
 Null            0
 Global          0
-Version         0   →a          (various platform-specific version info)
-New             0
-Member          2   os
-MemberSet       3   oso
-Parent          1
-ParentSet       2
-Members         1
-Equal           2               (2-code)
+Version         0               (various platform-specific version info)
+New             1   i
+Length          1   →i
+Member          2   oi
+MemberSet       3   oio
+Equal           2   →i
 
-Type detection**:
-ValidArray      1   →i
+Temporaries**:
+GetTemp         1   i           (argument must be a literal)
+SetTemp         2   io          (first argument must be a literal)
+
+Registers***:
+GetReg          1   i           (argument must be a literal)
+SetReg          2   io          (first argument must be a literal)
+
+Type detection****:
 ValidString     1   →i
 ValidFunction   1   →i
 ValidInteger    1   →i
@@ -23,11 +29,13 @@ ValidFloat      1   →i
 
 Function/stack:
 Call            2   co
-Throw           1               (no output)
-Catch           0               (2-code)
+Throw           1               (no value)
+Catch           0               (2-code*****)
 
 Behavioral:
-While           0               (2-code)
+If              0               (2-code*****)
+While           0               (2-code*****)
+Seq             variable
 
 Primitives:
 Associate       2   po→p
@@ -37,16 +45,13 @@ Strings:
 SConcat         2   ss→s
 SLength         1   s→i
 SSlice          3   sii→s
-SEqual          2   ss          (2-code)
+SEqual          2   ss→i
+SCode           1   s→c
 
-Arrays:
-Array           variable        (FIXME: can't handle variable anywhere else, maybe bad)
-AConcat         2   aa
-ALength         1   a→i
-AIndex          2   ai
-AIndexSet       3   aio
-NullArray       1   i
-ASlice          3   aii→a
+Array operations:
+Array           variable
+Concat          2
+Slice           3   aii→a
 
 Integers:
 IWidth          0   →i
@@ -64,31 +69,54 @@ INxor           2   ii→i
 IAnd            2   ii→i
 INand           2   ii→i
 IByte           1   i→s
-IEqual          2   ii          (2-code)
-INe             2   ii          (2-code)
-ILt             2   ii          (2-code)
-ILte            2   ii          (2-code)
-IGt             2   ii          (2-code)
-IGte            2   ii          (2-code)
+IEqual          2   ii→i
+INe             2   ii→i
+ILt             2   ii→i
+ILte            2   ii→i
+IGt             2   ii→i
+IGte            2   ii→i
 
-All the same for floats with F except Sl and Sr
+All the same for floats but prefixed F instead of I, and Sl and Sr are not
+provided. Types are the same s/i/f/ except for IEqual and later which return
+integers.
 
 Runtime:
-Include     1   s→s         (or a throw for failure)
+Include         1   s→s         (or a throw for failure)
+Parse           1   s
+Compile         1   s           (should always return code, but this is a property
+                             of the transforms and so not guaranteed)
+
+Grammar:
+GAdd            3   soo→s
+GRem            1   s→s
+GCommit         0               (always returns Null)
+
+Transform:
+TAddPhase       2   ss→s
+TAddTree        4   ssoo→s
+TAddCode        4   ssoc→s
+TRem            1   s→s
 
 *
   Types are in the form input→output. Either input or output may be disregarded
   if any sort of object is OK. 'input' is a string of letters, each of which is
   one of:
-    o: Any object
-    a: Array
+    o: Heap object (array)
     s: String
     c: Code (function)
     i: Integer
     f: Float
-    p: Any primitive (a, s, i or f)
+    p: Any primitive (s, c, i or f)
 
 **
+  There are infinitely many temporaries, and the job of translating temporaries
+  into registers is done by a standardized phase provided by the system.
+
+***
+  These should not be used directly, they are intended to be targets of GetTemp
+  and SetTemp.
+
+****
   Type detection returns an integer (0 for false, 1 for true). A positive
   response does NOT indicate that there is actually an associated primitive of
   that type, it only indicates that attempting to use the value as that type
@@ -96,8 +124,10 @@ Include     1   s→s         (or a throw for failure)
   primitives are stored acceptable such that implementations don't need too
   much tagging.
 
-FIXME:
-Resolve
+*****
+  2-code means that as well as taking the arguments specified, the given
+  operation takes two arbitrary expressions which will be evaluated or not
+  evaluated under some condition.
 
 
 
@@ -111,22 +141,63 @@ dissociated unless you explicitly dissociate.
 
 x86 ABI:
 EAX = Returns (as in C)
-EBX = (This) (object part)
-ECX = (This) (primitive part)
-EDX = Pointer to an array of major constants, e.g. (Global), (Version) and
+EBX = General
+ECX = General
+EDX = Pointer to array of Fythe "registers" and major constants, e.g. (Global), (Version) and
       major implementation functions, plus a pointer to the exception stack.
-ESI = Stack of Fythe values
-EDI = Pointer to array of Fythe "registers"
+ESI = Fythe stack pointer
+EDI = Fythe base pointer
 EBP = C base pointer (as in C)
 ESP = C stack pointer (as in C)
 
-Before calling a Fythe function, you must push (This) and any Fythe registers
-that are in use. Before calling a C function, you must push all processor
-registers, but no Fythe registers.
+Arrangement of the Fythe stack:
+EDI should be pushed to the C stack immediately after EBP during the normal
+function prologue, and popped before. That is, the function prologue is now:
+<
+pushl %ebp
+pushl %edi
+movl %esp, %ebp
+movl %esi, %edi
+>
+The Fythe stack grows UP, unlike the C stack. Each value on the Fythe stack is
+two words (as with all Fythe values). The top two words on the Fythe stack when
+a Fythe function is called should be the function object called and its
+argument. When a Fythe function is finished, these should be on the stack, as
+well as its return value. It is free to modify the two slots carrying the
+function object and argument, but the rest of the stack should be preserved.
+The function epilogue is reverse of the prologue, with the exception that %esi
+is not restored (as the stack height at this point MUST be exactly two words
+greater than the starting height):
+<
+movl %ebp, %esp
+pop %edi
+pop %ebp
+ret
+>
+Note that the C stack is used only for the call stack and preservation of Fythe
+base pointers.
+
+Arrangement of EDX array:
+0:      Fythe register 0 primitive
+1:      Fythe register 0 object
+...
+30:     Fythe register 15 primitive
+31:     Fythe register 15 object
+32:     Fythe exception stack pointer
+33:     Null
+34:     Global
+35:     Version
+
+Calls:
+Before calling a Fythe function, you must push any Fythe registers that are in
+use, as the next function is free to clobber them. Before calling a C function,
+you must push all processor registers, but no Fythe registers.
+
+
 
 x86_64 ABI:
 Same as x86 (swap 'E' for 'R'), but R8-R15 are the first four Fythe registers
-(e.g. R8 is FR0.o, R9 is FR0.p)
+(e.g. R8 is FR0.o, R9 is FR0.p), and so the EDX array is offset by 
 
 Before calling a Fythe function, you must push (This) and any Fythe registers
 that are in use. Before calling a C function, you must push all processor
