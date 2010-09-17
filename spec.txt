@@ -83,6 +83,28 @@ MSet            4   oiso
 MList           2   oi
 MContains       3   ois→i
 
+Threading (optional, exists if "threads" in (Version)):
+Spawn           2   co→t
+Join            1   t           (FIXME: what's the return?)
+LMutexNew       0   →l
+LMutexLock      1   l→l
+LMutexTryLock   1   l→i
+LMutexUnlock    1   l→l
+LMutexDestroy   1   l→o         (alwas returns (Null))
+LSemNew         0   →l
+LSemPost        1   l→l
+LSemWait        1   l→l
+LSemDestroy     1   l→o         (alwas returns (Null))
+LRWNew          0   →l
+LRWRLock        1   l→l
+LRWRTryLock     1   l→i
+LRWRUnlock      1   l→l
+LRWRLock        1   l→l
+LRWRTryLock     1   l→i
+LRWRUnlock      1   l→l
+LRWDestroy      1   l→o         (always returns (Null))
+Cas             3   oio
+
 Runtime:
 Include         1   s→s         (or a throw for failure)
 Parse           1   s
@@ -109,7 +131,9 @@ TRem            1   s→s
     c: Code (function)
     i: Integer
     f: Float
-    p: Any primitive (s, c, i or f)
+    t: Thread identifier
+    l: Lock
+    p: Any primitive (s, c, i, f, t or l)
 
 **
   There are infinitely many temporaries, and the job of translating temporaries
