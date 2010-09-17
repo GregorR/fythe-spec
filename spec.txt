@@ -17,10 +17,6 @@ Temporaries**:
 GetTemp         1   i           (argument must be a literal)
 SetTemp         2   io          (first argument must be a literal)
 
-Registers***:
-GetReg          1   i           (argument must be a literal)
-SetReg          2   io          (first argument must be a literal)
-
 Type detection****:
 ValidString     1   →i
 ValidFunction   1   →i
@@ -79,6 +75,12 @@ IGte            2   ii→i
 All the same for floats but prefixed F instead of I, and Sl and Sr are not
 provided. Types are the same s/i/f/ except for IEqual and later which return
 integers.
+
+Tables:
+MGet            3   ois         (table must be in an array index, uninitialized index is fine)
+MSet            4   oiso
+MList           2   oi
+MContains       3   ois→i
 
 Runtime:
 Include         1   s→s         (or a throw for failure)
@@ -178,11 +180,11 @@ Note that the C stack is used only for the call stack and preservation of Fythe
 base pointers.
 
 Arrangement of EDX array:
-0:      Fythe register 0 primitive
-1:      Fythe register 0 object
+0:      Fythe register 0 object
+1:      Fythe register 0 primitive
 ...
-30:     Fythe register 15 primitive
-31:     Fythe register 15 object
+30:     Fythe register 15 object
+31:     Fythe register 15 primitive
 32:     Fythe exception stack pointer
 33:     Null
 34:     Global
@@ -202,3 +204,14 @@ Same as x86 (swap 'E' for 'R'), but R8-R15 are the first four Fythe registers
 Before calling a Fythe function, you must push (This) and any Fythe registers
 that are in use. Before calling a C function, you must push all processor
 registers, but no Fythe registers >3.
+
+
+JavaScript ABI:
+
+Heap objects are arrays, with every other value being a primitive (object,
+primitive, etc). Fythe functions take two arguments, the function itself (as an
+array [object, function]) and its argument (also an array). There is no global
+Fythe stack, so Fythe functions also return their result as a size-2 array.
+Integers, floats, strings and functions are stored as such, objects are stored
+as arrays. Tables are just standard JavaScript objects initialized to {}, with
+each entry mapped to a size-2 array of the value.
