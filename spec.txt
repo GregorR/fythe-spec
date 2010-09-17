@@ -17,7 +17,7 @@ Temporaries**:
 Temp            1   i           (argument must be a literal)
 TempSet         2   io          (first argument must be a literal)
 
-Type detection****:
+Type detection***:
 ValidString     1   →i
 ValidFunction   1   →i
 ValidInteger    1   →i
@@ -27,11 +27,11 @@ ValidTable      2   oi→i        (object and index)
 Function/stack:
 Call            2   co
 Throw           1               (no value)
-Catch           0               (2-code*****)
+Catch           0               (2-code****)
 
 Behavioral:
-If              0               (2-code*****)
-While           0               (2-code*****)
+If              0               (2-code****)
+While           0               (2-code****)
 Seq             variable
 
 Primitives:
@@ -116,10 +116,6 @@ TRem            1   s→s
   into registers is done by a standardized phase provided by the system.
 
 ***
-  These should not be used directly, they are intended to be targets of GetTemp
-  and SetTemp.
-
-****
   Type detection returns an integer (0 for false, 1 for true). A positive
   response does NOT indicate that there is actually an associated primitive of
   that type, it only indicates that attempting to use the value as that type
@@ -127,7 +123,7 @@ TRem            1   s→s
   primitives are stored acceptable such that implementations don't need too
   much tagging.
 
-*****
+****
   2-code means that as well as taking the arguments specified, the given
   operation takes two arbitrary expressions which will be evaluated or not
   evaluated under some condition.
