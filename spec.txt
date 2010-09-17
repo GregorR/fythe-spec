@@ -14,14 +14,15 @@ MemberSet       3   oio
 Equal           2   →i
 
 Temporaries**:
-GetTemp         1   i           (argument must be a literal)
-SetTemp         2   io          (first argument must be a literal)
+Temp            1   i           (argument must be a literal)
+TempSet         2   io          (first argument must be a literal)
 
 Type detection****:
 ValidString     1   →i
 ValidFunction   1   →i
 ValidInteger    1   →i
 ValidFloat      1   →i
+ValidTable      2   oi→i        (object and index)
 
 Function/stack:
 Call            2   co
@@ -138,6 +139,10 @@ Note that associating a primitive with an object will NOT cause all instances
 of that object to be associated with that primitive, it's purely a local
 change. However, object-primitive pairs move together, and will not become
 dissociated unless you explicitly dissociate.
+
+There are two globally-nameable objects in Fythe: Null and Global. Null is a
+size-0 object and as such is usable only as a nonce. Global is size-1, with the
+first (and only) element being a table.
 
 
 
