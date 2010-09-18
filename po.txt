@@ -16,6 +16,7 @@ should be ignored. toString is a function taking one argument, the object,
 which converts the object to a string of some form. The structure object may
 contain more elements, only the first three must be defined like this.
 
+(PO.HeaderSize)                         => 3
 (PO.New sz struct)                      => (Seq (Seq (TempSet *0 (New (Add 1 sz))) (MemberSet (Temp *0) 0 struct)) (Temp *0))
 (PO.Structure obj)                      => (Member obj 0)
 (PO.Member obj name)                    => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 0) (Array (Temp *0) name)))
