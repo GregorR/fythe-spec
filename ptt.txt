@@ -1,18 +1,18 @@
 PTT is an object model for Fythe. PTT means Parent-Type-Table, and represents
-the fact that objects in the PTT model have (at least) those members. The
-translations for PTT are as follows:
+the fact that objects in the PTT model have (at least) those members after the
+PO members. The translations for PTT are as follows:
 
-(PTT.New)                               => (New 3)
-(PTT.NewArray sz)                       => (New (Add 3 sz))
-(PTT.Parent obj)                        => (Member obj 0)
-(PTT.ParentSet obj val)                 => (MemberSet obj 0 val)
-(PTT.Type obj)                          => (Member obj 1)
-(PTT.TypeSet obj val)                   => (MemberSet obj 1 val)
-(PTT.Member obj name)                   => (MGet obj 2 name)
-(PTT.MemberSet obj name val)            => (MSet obj 2 val)
-(PTT.Members obj)                       => (MList obj 2)
-(PTT.ValidPTT obj)                      => (Seq (TempSet *0 obj) (And (IGte (Length (Temp *0)) 3) (ValidTable (Temp *0) 2)))
-(PTT.ValidPTTArray obj)                 => (IGt (Length obj) 3)
-(PTT.Length obj)                        => (Sub (Length obj) 3)
-(PTT.Index obj idx)                     => (Member obj (Add idx 3))
-(PTT.IndexSet obj idx val)              => (MemberSet obj (Add idx 3) val)
+(PTT.NewArray sz)                       => (Seq (Seq (TempSet *0 (PO.New (Add 3 sz))) (MemberSet (Temp *0) 1 (This))) (Temp *0))
+(PTT.New)                               => (PTT.NewArray 0)
+(PTT.Parent obj)                        => (Member obj 1)
+(PTT.ParentSet obj val)                 => (MemberSet obj 1 val)
+(PTT.Type obj)                          => (Member obj 2)
+(PTT.TypeSet obj val)                   => (MemberSet obj 2 val)
+(PTT.Member obj name)                   => (MGet obj 3 name)
+(PTT.MemberSet obj name val)            => (MSet obj 3 val)
+(PTT.Members obj)                       => (MList obj 3)
+(PTT.ValidPTT obj)                      => (Seq (TempSet *0 obj) (And (IGte (Length (Temp *0)) 4) (ValidTable (Temp *0) 3)))
+(PTT.ValidPTTArray obj)                 => (IGt (Length obj) 4)
+(PTT.Length obj)                        => (Sub (Length obj) 4)
+(PTT.Index obj idx)                     => (Member obj (Add idx 4))
+(PTT.IndexSet obj idx val)              => (MemberSet obj (Add idx 4) val)
