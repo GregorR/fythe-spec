@@ -12,6 +12,10 @@ Length          1   →i
 Member          2   oi
 MemberSet       3   oio
 Equal           2   →i
+Object          variable
+Concat          2
+ConcatT         2               (transform-time)
+Slice           3   aii→a
 
 Temporaries**:
 Temp            1   i           (argument must be a literal)
@@ -44,12 +48,7 @@ SLength         1   s→i
 SSlice          3   sii→s
 SEqual          2   ss→i
 SCode           1   s→c
-SCodeT          1   s→c         (this applies the string to code translation at transform time)
-
-Array operations:
-Array           variable
-Concat          2
-Slice           3   aii→a
+SCodeT          1   s→c         (transform-time)
 
 Integers:
 IWidth          0   →i
