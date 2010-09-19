@@ -30,7 +30,7 @@ Throw           1               (no value)
 Catch           0               (2-code****)
 
 Behavioral:
-If              0               (2-code****)
+If              1               (2-code****)
 While           0               (2-code****)
 Seq             variable
 
@@ -44,6 +44,7 @@ SLength         1   s→i
 SSlice          3   sii→s
 SEqual          2   ss→i
 SCode           1   s→c
+SCodeT          1   s→c         (this applies the string to code translation at transform time)
 
 Array operations:
 Array           variable
@@ -61,11 +62,7 @@ ISl             2   ii→i
 ISr             2   ii→i
 INot            1   i→i
 IOr             2   ii→i
-INor            2   ii→i
-IXor            2   ii→i
-INxor           2   ii→i
 IAnd            2   ii→i
-INand           2   ii→i
 IByte           1   i→s
 IEqual          2   ii→i
 INe             2   ii→i
@@ -79,6 +76,7 @@ provided. Types are the same s/i/f/ except for IEqual and later which return
 integers.
 
 Tables:
+MInit           2   oi          (always returns (Null))
 MGet            3   ois         (table must be in an array index, uninitialized index is fine)
 MSet            4   oiso
 MList           2   oi
@@ -110,9 +108,9 @@ PCas            4   oipp→i      (only compares and swaps the primitive, not th
 
 Runtime:
 Include         1   s→s         (or a throw for failure)
-Parse           1   s
-Compile         1   s           (should always return code, but this is a property
-                             of the transforms and so not guaranteed)
+Parse           2   ss
+Transform       1   s           (should always return code, but this is a property
+                                 of the transforms and so not guaranteed)
 
 Grammar:
 GAdd            3   soo→s
@@ -120,10 +118,10 @@ GRem            1   s→s
 GCommit         0               (always returns Null)
 
 Transform:
-TAddPhase       2   ss→s
-TAddTree        4   ssoo→s
-TAddCode        4   ssoc→s
-TRem            1   s→s
+TAddPhase       2   ss→i
+TAddTree        3   soo→i
+TAddFunction    3   soc→i
+TRem            1   s→i
 
 *
   Types are in the form input→output. Either input or output may be disregarded
