@@ -13,4 +13,4 @@ allocation (good for monitors on objects):
                                              (Yield)
                                             )
                                            )
-(SpinLock.Unlock obj idx)               => (MemberSet obj idx (Associate 0 (Null)))
+(SpinLock.Unlock obj idx)               => (MemberSet obj idx 0)

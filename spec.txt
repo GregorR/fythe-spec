@@ -27,15 +27,17 @@ ValidFunction   1   →i
 ValidInteger    1   →i
 ValidFloat      1   →i
 ValidTable      2   oi→i        (object and index)
+ValidThread**** 1   →i
+ValidLock****   1   →i
 
 Function/stack:
 Call            2   co
 Throw           1               (no value)
-Catch           0               (2-code****)
+Catch           0               (2-code*****)
 
 Behavioral:
-If              1               (2-code****)
-While           0               (2-code****)
+If              1               (2-code)
+While           0               (2-code)
 Seq             variable
 
 Primitives:
@@ -69,10 +71,21 @@ ILt             2   ii→i
 ILte            2   ii→i
 IGt             2   ii→i
 IGte            2   ii→i
+IToFloat        1   i→f
 
-All the same for floats but prefixed F instead of I, and Sl and Sr are not
-provided. Types are the same s/i/f/ except for IEqual and later which return
-integers.
+Floats:
+FMul            2   ff→f
+FDiv            2   ff→f
+FMod            2   ff→f
+FAdd            2   ff→f
+FSub            2   ff→f
+FEqual          2   ff→i
+FNe             2   ff→i
+FLt             2   ff→i
+FLte            2   ff→i
+FGt             2   ff→i
+FGte            2   ff→i
+FToInteger      1   f→i
 
 Tables:
 MInit           2   oi          (always returns (Null))
@@ -81,7 +94,7 @@ MSet            4   oiso
 MList           2   oi
 MContains       3   ois→i
 
-Threading (optional, exists if "threads" in (Version)):
+Threading****:
 Spawn           2   co→t
 Join            1   t           (FIXME: what's the return?)
 Yield           0               (always returns (Null))
@@ -148,6 +161,12 @@ TRem            1   s→i
   much tagging.
 
 ****
+  Threading is an optional feature. If it is supported, the string "threads"
+  should appear as an element of (Version). Everything under the "Threading"
+  subsection as well as the "ValidThread" and "ValidLock" instructions only
+  exist if threading is supported.
+
+*****
   2-code means that as well as taking the arguments specified, the given
   operation takes two arbitrary expressions which will be evaluated or not
   evaluated under some condition.
