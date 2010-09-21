@@ -189,7 +189,7 @@ x86 ABI:
 EAX = Returns (as in C)
 EBX = General
 ECX = General
-EDX = Pointer to array of Fythe "registers" and major constants, e.g. (Global), (Version) and
+EBX = Pointer to array of Fythe "registers" and major constants, e.g. (Global), (Version) and
       major implementation functions, plus a pointer to the exception stack.
 ESI = Fythe stack pointer
 EDI = Fythe base pointer
@@ -223,7 +223,7 @@ ret
 Note that the C stack is used only for the call stack and preservation of Fythe
 base pointers.
 
-Arrangement of EDX array:
+Arrangement of EBX array:
 0:      Fythe register 0 object
 1:      Fythe register 0 primitive
 ...
@@ -246,11 +246,11 @@ R12 = Pointer to array of Fythe "registers" and major constants, e.g. (Global), 
 R13 = Fythe stack pointer
 R14 = Fythe base pointer
 
-R12 is arranged as EDX on x86
+R12 is arranged as EBX on x86
 
 
 ARM ABI:
-R6  = as EDX on x86
+R6  = as EBX on x86
 R7  = as ESI on x86
 R8  = as EDI on x86
 
