@@ -250,9 +250,9 @@ R12 is arranged as EDX on x86
 
 
 ARM ABI:
-R9  = as EDX on x86
-R10 = as ESI on x86
-R11 = as EDI on x86
+R6  = as EDX on x86
+R7  = as ESI on x86
+R8  = as EDI on x86
 
 
 JavaScript ABI:
