@@ -150,7 +150,7 @@ TRem            1   s→i
 
 **
   There are infinitely many temporaries, and the job of translating temporaries
-  into registers is done by a standardized phase provided by the system.
+  into registers or what-have-you is done by the implementation.
 
 ***
   Type detection returns an integer (0 for false, 1 for true). A positive
@@ -185,16 +185,20 @@ first (and only) element being a table.
 
 
 
+Common ABI:
+On all real machine targets, the following ABI properties are true:
+ * The caller pushes any used machine registers (since very rarely are any
+   used) as well as Fythe registers
+ * The three Fythe-specific machine registers must be set up properly whenever
+   Fythe code is running; so, they must be set before entering Fythe code from
+   C, and not clobbered by C code called from Fythe.
+
+
 x86 ABI:
-EAX = Returns (as in C)
-EBX = General
-ECX = General
-EBX = Pointer to array of Fythe "registers" and major constants, e.g. (Global), (Version) and
+EDX = Pointer to array of major constants, e.g. (Global), (Version) and
       major implementation functions, plus a pointer to the exception stack.
 ESI = Fythe stack pointer
 EDI = Fythe base pointer
-EBP = C base pointer (as in C)
-ESP = C stack pointer (as in C)
 
 Arrangement of the Fythe stack:
 EDI should be pushed to the C stack immediately after EBP during the normal
@@ -223,16 +227,8 @@ ret
 Note that the C stack is used only for the call stack and preservation of Fythe
 base pointers.
 
-Arrangement of EBX array:
-0:      Fythe register 0 object
-1:      Fythe register 0 primitive
-...
-30:     Fythe register 15 object
-31:     Fythe register 15 primitive
-32-33:  Null
-34-35:  Global
-36-37:  Version
-38:     Fythe exception stack pointer
+Arrangement of EDX array:
+(See CFythe implementation)
 
 Calls:
 Before calling a Fythe function, you must push any Fythe registers that are in
@@ -241,8 +237,7 @@ you must push all processor registers, but no Fythe registers.
 
 
 x86_64 ABI:
-R12 = Pointer to array of Fythe "registers" and major constants, e.g. (Global), (Version) and
-      major implementation functions, plus a pointer to the exception stack.
+R12 = Fythe constants bank
 R13 = Fythe stack pointer
 R14 = Fythe base pointer
 
@@ -250,9 +245,9 @@ R12 is arranged as EBX on x86
 
 
 ARM ABI:
-R6  = as EBX on x86
-R7  = as ESI on x86
-R8  = as EDI on x86
+R6  = Fythe constants bank
+R7  = Fythe stack pointer
+R8  = Fythe base pointer
 
 
 JavaScript ABI:
