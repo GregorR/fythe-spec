@@ -195,10 +195,9 @@ On all real machine targets, the following ABI properties are true:
 
 
 x86 ABI:
-EDX = Pointer to array of major constants, e.g. (Global), (Version) and
-      major implementation functions, plus a pointer to the exception stack.
 ESI = Fythe stack pointer
-EDI = Fythe base pointer
+EDI = Pointer to array of major constants, e.g. (Global), (Version) and
+      major implementation functions, plus a pointer to the exception stack.
 
 Arrangement of the Fythe stack:
 EDI should be pushed to the C stack immediately after EBP during the normal
@@ -227,7 +226,7 @@ ret
 Note that the C stack is used only for the call stack and preservation of Fythe
 base pointers.
 
-Arrangement of EDX array:
+Arrangement of EDI array:
 (See CFythe implementation)
 
 Calls:
@@ -239,15 +238,11 @@ you must push all processor registers, but no Fythe registers.
 x86_64 ABI:
 R12 = Fythe constants bank
 R13 = Fythe stack pointer
-R14 = Fythe base pointer
-
-R12 is arranged as EBX on x86
 
 
 ARM ABI:
 R6  = Fythe constants bank
 R7  = Fythe stack pointer
-R8  = Fythe base pointer
 
 
 JavaScript ABI:
