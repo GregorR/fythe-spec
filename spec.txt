@@ -1,5 +1,8 @@
 Name            AC  Types*      Notes
 
+Meta:
+Function        *   →c          (declares that the IR within forms a function literal)
+
 Objects:
 This            0
 ThisSet         1
@@ -34,6 +37,7 @@ Function/stack:
 Call            2   co
 Throw           1               (no value)
 Catch           0               (2-code*****)
+Caught          0
 
 Behavioral:
 If              1               (2-code)
@@ -49,8 +53,6 @@ SConcat         2   ss→s
 SLength         1   s→i
 SSlice          3   sii→s
 SEqual          2   ss→i
-SCode           1   s→c
-SCodeT          1   s→c         (transform-time)
 
 Integers:
 IWidth          0   →i
