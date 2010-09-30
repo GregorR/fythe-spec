@@ -1,3 +1,72 @@
+Fythe is a design for virtual machines primarily targeting dynamic languages.
+It is not precisely a language or an interpreter, but a framework for creating
+interpreters for languages.
+
+The execution of a program by Fythe proceeds as follows:
+
+ * The program source is parsed (one statement or declaration at a time) by the
+   Fythe parser. The productions used are defined at runtime, and may be
+   changed at any time. The result of parsing is a tree, the form of which is
+   also defined at runtime.
+
+ * The tree produced by parsing is run through a number of transformations.
+   These transformations are defined at runtime, and may be changed at any
+   time. The result of these transformations is a tree which must fit a
+   prescribed grammar, the Fythe Intermediate Representation (Fythe IR).
+
+ * The Fythe IR tree is reduced into executable code, generally machine code,
+   by an implementation-specific means, and run. The behavior of the generated
+   code is dictated by the behavioral specification of Fythe IR herein.
+
+The first section of this specification describes the Fythe IR in isolation.
+Later sections (yet to be written) will describe the parser and transform
+engine.
+
+Every IR expression can be reduced at runtime to a value. A value in Fythe is
+an object reference associated optionally with a primitive value. A primitive
+value is a string, function, integer, floating-point number, or
+implementation-specific primitive. All primitives are immutable. An object is
+an array of values; that is, a set of values indexed by keys which range from 0
+to the size of the object, exclusively. There are several special objects,
+notably Null, which is an object of size 0 used as a special value.
+
+The IR is a tree, formed by Fythe objects. Although there is no canonical
+syntax for objects, for the purpose of this specification, LISP-like list
+expressions are used, conforming to the following BNF grammar (using regular
+expressions as terminals):
+
+WhiteN = /[ \t\r\n]*/
+Expression = /\(/ WhiteN List /\)/ WhiteN
+           | /\(/ WhiteN /\)/ WhiteN
+           | /[^\(\)\{\}0-9 \t\r\n][^\(\)\{\} \t\r\n]*/ WhiteN
+           | /[0-9]+/ WhiteN
+List = Expression
+     | Expression List
+
+An expression of the first two forms represents an object associated with no
+primitive. An expression of the third form represents a string associated with
+Null. An expression of the fourth form represents an integer associated with
+Null. This syntax has no means of expressing objects other than Null associated
+with primitive values, as these have no behavior in the Fythe IR.
+
+A Fythe IR expression is an object in which the first element is a string
+literal, the value of which is the type of expression, and the remaining
+elements are arguments. For instance,
+  (Null)
+is a Fythe IR expression which (at runtime) reduces to the value Null
+(associated with no primitive),
+  (New 2)
+is a Fythe IR expression which reduces to a newly-created object of size 2, and
+  (Concat (New 2) (New 2))
+is a Fythe IR expression which (rather pointlessly) concatenates two
+newly-produced objects of size 2, to produce a new object of size 4.
+
+The following is a list of every Fythe IR expression, its argument types, the
+types its arguments must have (when reduced at runtime), and any additional
+notes. The actual behavior of each expression is not yet documented, for the
+moment it is hoped that their name will be sufficient to describe their
+behavior.
+
 Name            AC  Types*      Notes
 
 Meta:
@@ -175,15 +244,16 @@ TRem            1   s→i
 
 
 
-Values in Fythe are a mandatory object associated with an optional primitive.
 Note that associating a primitive with an object will NOT cause all instances
 of that object to be associated with that primitive, it's purely a local
 change. However, object-primitive pairs move together, and will not become
 dissociated unless you explicitly dissociate.
 
-There are two globally-nameable objects in Fythe: Null and Global. Null is a
-size-0 object and as such is usable only as a nonce. Global is size-1, with the
-first (and only) element being a table.
+There are three globally-nameable objects in Fythe: Null, Global and Version.
+Null is a size-0 object and as such is usable only as a nonce. Global is
+size-1, with the first (and only) element being a table. Version has variable
+size, and stores implementation-specific identifiers allowing code to identify
+the implementation of Fythe being used, and features it supports.
 
 
 
