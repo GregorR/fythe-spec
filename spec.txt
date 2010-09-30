@@ -22,18 +22,18 @@ The first section of this specification describes the Fythe IR in isolation.
 Later sections (yet to be written) will describe the parser and transform
 engine.
 
-Every IR expression can be reduced at runtime to a value. A value in Fythe is
-an object reference associated optionally with a primitive value. A primitive
+Every IR expression is reduced at runtime to a value. A value in Fythe is an
+object reference associated optionally with a primitive value. A primitive
 value is a string, function, integer, floating-point number, or
 implementation-specific primitive. All primitives are immutable. An object is
 an array of values; that is, a set of values indexed by keys which range from 0
 to the size of the object, exclusively. There are several special objects,
-notably Null, which is an object of size 0 used as a special value.
+notably Null, which is a particular object of size 0 used as a nonce.
 
-The IR is a tree, formed by Fythe objects. Although there is no canonical
-syntax for objects, for the purpose of this specification, LISP-like list
-expressions are used, conforming to the following BNF grammar (using regular
-expressions as terminals):
+The IR is a tree, formed by Fythe values. Although there is no canonical syntax
+for Fythe values, this specification uses LISP-like list expressions,
+conforming to the following BNF grammar (using regular expressions as
+terminals):
 
 WhiteN = /[ \t\r\n]*/
 Expression = /\(/ WhiteN List /\)/ WhiteN
@@ -58,10 +58,11 @@ is a Fythe IR expression which (at runtime) reduces to the value Null
   (New 2)
 is a Fythe IR expression which reduces to a newly-created object of size 2, and
   (Concat (New 2) (New 2))
-is a Fythe IR expression which (rather pointlessly) concatenates two
-newly-produced objects of size 2, to produce a new object of size 4.
+is a Fythe IR expression which (rather pointlessly) reduces to the
+concatenation of two newly-produced objects of size 2, to produce a new object
+of size 4.
 
-The following is a list of every Fythe IR expression, its argument types, the
+The following is a list of every Fythe IR expression, its argument count, the
 types its arguments must have (when reduced at runtime), and any additional
 notes. The actual behavior of each expression is not yet documented, for the
 moment it is hoped that their name will be sufficient to describe their
@@ -70,7 +71,7 @@ behavior.
 Name            AC  Types*      Notes
 
 Meta:
-Function        *   →c          (declares that the IR within forms a function literal)
+Function        0   →c          (1-code**) (declares that the IR within forms a function literal)
 
 Objects:
 This            0
@@ -89,23 +90,23 @@ Concat          2
 ConcatT         2               (transform-time)
 Slice           3   aii→a
 
-Temporaries**:
+Temporaries***:
 Temp            1   i           (argument must be a literal)
 TempSet         2   io          (first argument must be a literal)
 
-Type detection***:
+Type detection****:
 ValidString     1   →i
 ValidFunction   1   →i
 ValidInteger    1   →i
 ValidFloat      1   →i
 ValidTable      2   oi→i        (object and index)
-ValidThread**** 1   →i
-ValidLock****   1   →i
+ValidThread*****1   →i
+ValidLock*****  1   →i
 
 Function/stack:
 Call            2   co
 Throw           1               (no value)
-Catch           0               (2-code*****)
+Catch           0               (2-code)
 Caught          0
 
 Behavioral:
@@ -220,10 +221,17 @@ TRem            1   s→i
     p: Any primitive (s, c, i, f, t or l)
 
 **
+  n-code means that as well as taking the arguments specified, the given
+  operation has transform-time (as opposed to runtime) behavior over n further
+  expressions. For instance, these expressions may be evaluated conditionally, or
+  in the case of Function this expression is declared to be the body of a
+  function literal.
+
+***
   There are infinitely many temporaries, and the job of translating temporaries
   into registers or what-have-you is done by the implementation.
 
-***
+****
   Type detection returns an integer (0 for false, 1 for true). A positive
   response does NOT indicate that there is actually an associated primitive of
   that type, it only indicates that attempting to use the value as that type
@@ -231,16 +239,11 @@ TRem            1   s→i
   primitives are stored acceptable such that implementations don't need too
   much tagging.
 
-****
+*****
   Threading is an optional feature. If it is supported, the string "threads"
   should appear as an element of (Version). Everything under the "Threading"
   subsection as well as the "ValidThread" and "ValidLock" instructions only
   exist if threading is supported.
-
-*****
-  2-code means that as well as taking the arguments specified, the given
-  operation takes two arbitrary expressions which will be evaluated or not
-  evaluated under some condition.
 
 
 
