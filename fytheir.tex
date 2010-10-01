@@ -15,13 +15,15 @@ terminals):
 
 % FIXME: I'd like to do this in a less Ad-Hoc way, but I know of none
 \begin{verbatim}
-WhiteN = /[ \t\r\n]*/
-Expression = /\(/ WhiteN List /\)/ WhiteN
-           | /\(/ WhiteN /\)/ WhiteN
-           | /[^\(\)\{\}0-9 \t\r\n][^\(\)\{\} \t\r\n]*/ WhiteN
-           | /[0-9]+/ WhiteN
-List = Expression
-     | Expression List
+WhiteN      = /[ \t\r\n]*/
+
+Expression  = /\(/ WhiteN List /\)/ WhiteN
+            | /\(/ WhiteN /\)/ WhiteN
+            | /[^\(\)\{\}0-9 \t\r\n][^\(\)\{\} \t\r\n]*/ WhiteN
+            | /[0-9]+/ WhiteN
+
+List        = Expression
+            | Expression List
 \end{verbatim}
 
 An expression of the first two forms represents an object associated with no
