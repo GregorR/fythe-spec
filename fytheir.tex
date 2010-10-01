@@ -45,10 +45,20 @@ is a Fythe IR expression which (rather pointlessly) reduces to the
 concatenation of two newly-produced objects of size 2, to produce a new object
 of size 4.
 
-The following is a list of every Fythe IR expression, its argument count, the
-types its arguments must have (when reduced at runtime), and any additional
-notes. The actual behavior of each expression is not yet documented, for the
-moment it is hoped that their name will be sufficient to describe their
-behavior.
+The following table is a list of every Fythe IR expression, its parameter
+count, the types its arguments must have (when reduced at runtime), and any
+additional notes. The types are expressed as a string of letters, with each
+letter corresponding to one argument or return type. Where the input types are
+all generic (just objects, no primitives necessary) the list is elided, as is
+the return type when it may be any object or primitive type. The association
+between letters and types is in Figure~\ref{irtypes}. The actual behavior of
+each expression is not yet documented, for the moment it is hoped that their
+name will be sufficient to describe their behavior.
 
 \LTXtable{\linewidth}{irexpressions.tex}
+
+\begin{wrapfigure}{L}{0.35\textwidth}
+\LTXtable{\linewidth}{irtypes.tex}
+\caption{Fythe type identifiers}
+\label{irtypes}
+\end{wrapfigure}
