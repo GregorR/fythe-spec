@@ -1,0 +1,61 @@
+\usepackage{multicol}
+
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+
+\begin{document}
+\ifdefined\specdocheader
+    \specdocheader
+\else\fi
+
+\begin{titlepage}
+\begin{center}
+
+\Huge{\textsf{Fythe Specification}}
+
+\small{This specification is not yet complete.\\It is available in Fythe's mercurial repository, at \texttt{https://codu.org/projects/fythe/spechg/}.}
+
+\Large{\textsf{Revision \input{hgversion.tex}}}
+
+\large{\input{hgdate.tex}}
+
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+
+\chapter{Overview}
+
+Fythe is a design for virtual machines primarily targeting dynamic languages.
+It is not precisely a language or an interpreter, but a framework for creating
+interpreters for languages.
+
+The execution of a program by Fythe proceeds as follows:
+
+\begin{itemize}
+\item
+The program source is parsed (one statement or declaration at a time) by the
+Fythe parser. The productions used are defined at runtime, and may be changed
+at any time. The result of parsing is a tree, the form of which is also defined
+at runtime.
+
+\item
+The tree produced by parsing is run through a number of transformations.  These
+transformations are defined at runtime, and may be changed at any time. The
+result of these transformations is a tree which must fit a prescribed grammar,
+the Fythe Intermediate Representation (Fythe IR).
+
+\item
+The Fythe IR tree is reduced into executable code, generally machine code, by
+an implementation-specific means, and run. The behavior of the generated code
+is dictated by the behavioral specification of Fythe IR herein.
+\end{itemize}
+
+The first section of this specification describes the Fythe IR in isolation.
+Later sections (yet to be written) will describe the parser and transform
+engine.
+
+\input{fytheir.tex}
+
+\end{document}

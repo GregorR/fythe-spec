@@ -1,0 +1,252 @@
+\newcommand{\hdr}[1]{\multicolumn{4}{c}{\textbf{#1}}\\\hline}
+
+\begin{longtable}{ | l | l | l | X | }
+\hline
+\textbf{Name} & \textbf{P} & \textbf{Types} & \textbf{Notes} \\
+\hline
+\hline
+\endhead
+
+\hdr{Meta}
+Function & 1 & \ra c & (declares that the IR within forms a function literal)\\
+\hline
+
+\hdr{Objects}
+This & 0 & &\\
+\hline
+ThisSet & 1 & &\\
+\hline
+Arg & 0 & &\\
+\hline
+Null & 0 & &\\
+\hline
+Global & 0 & &\\
+\hline
+Version & 0 & & (various platform-specific version info)\\
+\hline
+New & 1 & i &\\
+\hline
+Length & 1 & \ra i &\\
+\hline
+Member & 2 & oi &\\
+\hline
+MemberSet & 3 & oio &\\
+\hline
+Equal & 2 & \ra i &\\
+\hline
+Object & * & &\\
+\hline
+Concat & 2 & &\\
+\hline
+ConcatT & 2 & & (transform-time)\\
+\hline
+Slice & 3 & aii\ra a\\
+\hline
+
+\hdr{Temporaries\footnote{Fythe provides infinite temporaries, but the mapping of temporaries to registers or similar is implementation-defined.}}
+Temp & 1 & i & (argument must be a literal)\\
+\hline
+TempSet & 2 & io & (first argument must be a literal)\\
+\hline
+
+\hdr{Type detection\footnote{There is \textit{no} correct behavior for these functions, they are purely heuristic. That is, any implementation is allowed to produce incorrect results if it cannot distinguish between types; proper type management is the responsibility of the programmer or language implementer, not Fythe.}}
+ValidString & 1 & \ra i &\\
+\hline
+ValidFunction & 1 & \ra i &\\
+\hline
+ValidInteger & 1 & \ra i &\\
+\hline
+ValidFloat & 1 & \ra i &\\
+\hline
+ValidTable & 2 & oi\ra i & (object and index)\\
+\hline
+ValidThread & 1 & \ra i &\\
+\hline
+ValidLock & 1 & \ra i\\
+\hline
+
+\hdr{Function and call-stack}
+Call & 2 & co &\\
+\hline
+Throw & 1 & & (no value)\\
+\hline
+Catch & 2 & &\\
+\hline
+Caught & 0 & &\\
+\hline
+
+\hdr{Behavioral}
+If & 3 & i &\\
+\hline
+While & 2 & &\\
+\hline
+Seq & v & &\\
+\hline
+
+\hdr{Primitives}
+Associate & 2 & po\ra p &\\
+\hline
+Dissociate & 1 & p\ra o &\\
+\hline
+
+\hdr{Strings}
+SConcat & 2 & ss\ra s &\\
+\hline
+SLength & 1 & s\ra i &\\
+\hline
+SSlice & 3 & sii\ra s &\\
+\hline
+SEqual & 2 & ss\ra i &\\
+\hline
+
+\hdr{Integers}
+IWidth & 0 & \ra i &\\
+\hline
+IMul & 2 & ii\ra i &\\
+\hline
+IDiv & 2 & ii\ra i &\\
+\hline
+IMod & 2 & ii\ra i &\\
+\hline
+IAdd & 2 & ii\ra i &\\
+\hline
+ISub & 2 & ii\ra i &\\
+\hline
+ISl & 2 & ii\ra i &\\
+\hline
+ISr & 2 & ii\ra i &\\
+\hline
+INot & 1 & i\ra i &\\
+\hline
+IOr & 2 & ii\ra i &\\
+\hline
+IAnd & 2 & ii\ra i &\\
+\hline
+IByte & 1 & i\ra s &\\
+\hline
+IEqual & 2 & ii\ra i &\\
+\hline
+INe & 2 & ii\ra i &\\
+\hline
+ILt & 2 & ii\ra i &\\
+\hline
+ILte & 2 & ii\ra i &\\
+\hline
+IGt & 2 & ii\ra i &\\
+\hline
+IGte & 2 & ii\ra i &\\
+\hline
+IToFloat & 1 & i\ra f &\\
+\hline
+
+\hdr{Floats}
+FMul & 2 & ff\ra f &\\
+\hline
+FDiv & 2 & ff\ra f &\\
+\hline
+FMod & 2 & ff\ra f &\\
+\hline
+FAdd & 2 & ff\ra f &\\
+\hline
+FSub & 2 & ff\ra f &\\
+\hline
+FEqual & 2 & ff\ra i &\\
+\hline
+FNe & 2 & ff\ra i &\\
+\hline
+FLt & 2 & ff\ra i &\\
+\hline
+FLte & 2 & ff\ra i &\\
+\hline
+FGt & 2 & ff\ra i &\\
+\hline
+FGte & 2 & ff\ra i &\\
+\hline
+FToInteger & 1 & f\ra i &\\
+\hline
+
+\hdr{Tables}
+MInit & 2 & oi & (always returns (Null))\\
+\hline
+MGet & 3 & ois & (table must be in an array index, uninitialized index is fine)\\
+\hline
+MSet & 4 & oiso &\\
+\hline
+MList & 2 & oi &\\
+\hline
+MContains & 3 & ois\ra i &\\
+\hline
+
+\hdr{Threading}
+Spawn & 2 & co\ra t &\\
+\hline
+Join & 1 & t & (FIXME: what's the return?)\\
+\hline
+Yield & 0 & & (always returns (Null))\\
+\hline
+LMutexNew & 0 & \ra l &\\
+\hline
+LMutexLock & 1 & l\ra l &\\
+\hline
+LMutexTryLock & 1 & l\ra i &\\
+\hline
+LMutexUnlock & 1 & l\ra l &\\
+\hline
+LMutexDestroy & 1 & l\ra o & (alwas returns (Null))\\
+\hline
+LSemNew & 0 & \ra l &\\
+\hline
+LSemPost & 1 & l\ra l &\\
+\hline
+LSemWait & 1 & l\ra l &\\
+\hline
+LSemDestroy & 1 & l\ra o & (alwas returns (Null))\\
+\hline
+LRWNew & 0 & \ra l &\\
+\hline
+LRWRLock & 1 & l\ra l &\\
+\hline
+LRWRTryLock & 1 & l\ra i &\\
+\hline
+LRWRUnlock & 1 & l\ra l &\\
+\hline
+LRWRLock & 1 & l\ra l &\\
+\hline
+LRWRTryLock & 1 & l\ra i &\\
+\hline
+LRWRUnlock & 1 & l\ra l &\\
+\hline
+LRWDestroy & 1 & l\ra o & (always returns (Null))\\
+\hline
+Cas & 4 & oioo\ra i & (only compares and swaps the object, not the primitive)\\
+\hline
+PCas & 4 & oipp\ra i & (only compares and swaps the primitive, not the object)\\
+\hline
+
+\hdr{Runtime}
+Include & 1 & s\ra s & (or a throw for failure)\\
+\hline
+Parse & 2 & ss &\\
+\hline
+Transform & 1 & s & (should always return code, but this is a property of the transforms and so not guaranteed)\\
+\hline
+
+\hdr{Grammar}
+GAdd & 3 & soo\ra s &\\
+\hline
+GRem & 1 & s\ra s &\\
+\hline
+GCommit & 0 & & (always returns Null)\\
+\hline
+
+\hdr{Transform}
+TAddPhase & 2 & ss\ra i &\\
+\hline
+TAddTree & 3 & soo\ra i &\\
+\hline
+TAddFunction & 3 & soc\ra i &\\
+\hline
+TRem & 1 & s\ra i &\\
+\hline
+
+\end{longtable}

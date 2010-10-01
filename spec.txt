@@ -1,3 +1,7 @@
+READ ME FIRST:
+The whole beginning of this document has been moved into LaTeX, and is only
+maintained there. The ABIs are still maintained only in this document.
+
 Fythe is a design for virtual machines primarily targeting dynamic languages.
 It is not precisely a language or an interpreter, but a framework for creating
 interpreters for languages.

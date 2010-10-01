@@ -1,0 +1,52 @@
+\chapter{Fythe Objects and IR}
+
+Every IR expression is reduced at runtime to a value. A value in Fythe is an
+object reference associated optionally with a primitive value. A primitive
+value is a string, function, integer, floating-point number, or
+implementation-specific primitive. All primitives are immutable. An object is
+an array of values; that is, a set of values indexed by keys which range from 0
+to the size of the object, exclusively. There are several special objects,
+notably Null, which is a particular object of size 0 used as a nonce.
+
+The IR is a tree, formed by Fythe values. Although there is no canonical syntax
+for Fythe values, this specification uses LISP-like list expressions,
+conforming to the following BNF grammar (using regular expressions as
+terminals):
+
+% FIXME: I'd like to do this in a less Ad-Hoc way, but I know of none
+\begin{verbatim}
+WhiteN = /[ \t\r\n]*/
+Expression = /\(/ WhiteN List /\)/ WhiteN
+           | /\(/ WhiteN /\)/ WhiteN
+           | /[^\(\)\{\}0-9 \t\r\n][^\(\)\{\} \t\r\n]*/ WhiteN
+           | /[0-9]+/ WhiteN
+List = Expression
+     | Expression List
+\end{verbatim}
+
+An expression of the first two forms represents an object associated with no
+primitive. An expression of the third form represents a string associated with
+Null. An expression of the fourth form represents an integer associated with
+Null. This syntax has no means of expressing objects other than Null associated
+with primitive values, as these have no behavior in the Fythe IR.
+
+A Fythe IR expression is an object in which the first element is a string
+literal, the value of which is the type of expression, and the remaining
+elements are arguments. For instance,
+\texttt{(Null)}
+is a Fythe IR expression which (at runtime) reduces to the value Null
+(associated with no primitive),
+\texttt{(New 2)}
+is a Fythe IR expression which reduces to a newly-created object of size 2, and
+\texttt{(Concat (New 2) (New 2))}
+is a Fythe IR expression which (rather pointlessly) reduces to the
+concatenation of two newly-produced objects of size 2, to produce a new object
+of size 4.
+
+The following is a list of every Fythe IR expression, its argument count, the
+types its arguments must have (when reduced at runtime), and any additional
+notes. The actual behavior of each expression is not yet documented, for the
+moment it is hoped that their name will be sufficient to describe their
+behavior.
+
+\LTXtable{\linewidth}{irexpressions.tex}
