@@ -2,73 +2,107 @@
 
 \beginlongtable{ | l | l | l | X | }
 \hline
-\textbf{Name} & \textbf{P} & \textbf{Types} & \textbf{Notes} \\
+\textbf{Name} & \textbf{P} & \textbf{Types} & \textbf{Behavior} \\
 \hline
 \hline
 \endhead
 
 \hdr{Meta}
-Function & 1 & O\ra c & (declares that the IR within forms a function literal)\\
+Function & 1 & O\ra c & Result is a function (associated with Null) with the first argument as its body \\
 \hline
 
 \hdr{Objects}
-This & 0 & &\\
+This & 0 & & Result is the value of the This register, which is initially the
+value called. \\
 \hline
-ThisSet & 1 & &\\
+ThisSet & 1 & & The This register is set to the value of argument 0. Result is
+the value. \\
 \hline
-Arg & 0 & &\\
+Arg & 0 & & Result is the value of the Argument register, which is initially
+the second argument of the Call expression used to call this function. \\
 \hline
-Null & 0 & &\\
+Null & 0 & & Evaluates to Null, with no primitive associated. \\
 \hline
-Global & 0 & &\\
+Global & 0 & & Evaluates to Global, with no primitive associated. \\
 \hline
-Version & 0 & & (various platform-specific version info)\\
+Version & 0 & & Evaluates to Version, with no primitive associated. \\
 \hline
-New & 1 & i &\\
+New & 1 & i & A new object, the size of which is specified by the first
+argument, is created. Each field of the new object has the value of Null with
+no primitive associated. The result is the new object, with no primitive
+associated. \\
 \hline
-Length & 1 & \ra i &\\
+Length & 1 & \ra i & Given an object, evaluates to its size, with Null
+associated. \\
 \hline
-Member & 2 & oi &\\
+Member & 2 & oi & Given an object and an index, evaluates to the value at that
+index of the object. \\
 \hline
-MemberSet & 3 & oio &\\
+MemberSet & 3 & oio & Given a ``to'' object, an index, and a ``from'' value,
+sets the value of the ``from'' object at that index to the ``to'' value. Result
+is the ``from'' value. \\
 \hline
-Equal & 2 & \ra i &\\
+Equal & 2 & \ra i & Given two objects, if they are referentially identical
+(ignoring the primitive), results in the integer 1 associated with Null.
+Otherwise results in the integer 0 associated with Null. \\
 \hline
-Object & * & &\\
+Object & * & & Creates a new object, the size of which is the number of
+arguments. The values of the fields are the values of the arguments, in the
+order they appear. Result is the new object, with no primitive associated. \\
 \hline
-Concat & 2 & &\\
+Concat & 2 & & Creates a new object, the size of which is the sum of the size
+of the two argument objects. Given objects of size N and M, the values of the
+new object's fields $[0..N-1]$ are set to the values of the first argument
+object's fields, and the values of the new object's fields $[N..N+M-1]$ are set
+to values of the second argument object's fields. Result is the new object,
+with no primitive associated. \\
 \hline
-ConcatT & 2 & & (transform-time)\\
+ConcatT & 2 & & See the Fythe transform engine's documentation. \\
 \hline
-Slice & 3 & aii\ra a\\
+Slice & 3 & oii\ra a & Given an object and two indexes X and Y, creates a new
+object of size $Y-X$. The values of the new object's fields $[0..Y-X]$ are set
+to the values of the argument object's fields $[X..Y-1]$. Result is the new
+object, with no primitive associated. \\
 \hline
 
 \hdr{Temporaries\footnote{Fythe provides infinite temporaries, but the mapping of temporaries to registers or similar is implementation-defined.}}
-Temp & 1 & i & (argument must be a literal)\\
+Temp & 1 & i & See the Temporaries section. \\ % FIXME: make one :)
 \hline
-TempSet & 2 & io & (first argument must be a literal)\\
+TempSet & 2 & io &\\
 \hline
 
-\hdr{Type detection\footnote{There is \textit{no} correct behavior for these functions, they are purely heuristic. That is, any implementation is allowed to produce incorrect results if it cannot distinguish between types; proper type management is the responsibility of the programmer or language implementer, not Fythe.}}
-ValidString & 1 & \ra i &\\
+\hdr{Type detection\footnote{There is \textit{no} correct behavior for these
+functions, they are purely heuristic. That is, any implementation is allowed to
+produce incorrect results if it cannot distinguish between types; proper type
+management is the responsibility of the programmer or language implementer, not
+Fythe.}}
+ValidString & 1 & \ra i & \validshpiel{a string} \\
 \hline
-ValidFunction & 1 & \ra i &\\
+ValidFunction & 1 & \ra i & \validshpiel{a function} \\
 \hline
-ValidInteger & 1 & \ra i &\\
+ValidInteger & 1 & \ra i & \validshpiel{an integer} \\
 \hline
-ValidFloat & 1 & \ra i &\\
+ValidFloat & 1 & \ra i & \validshpiel{a floating-point number} \\
 \hline
-ValidTable & 2 & oi\ra i & (object and index)\\
+ValidTable & 2 & oi\ra i & Will result in the integer 1 or 0, in either case
+associated with Null. Given an object and an index, if the value of the indexed
+field of the object was created as a table, the result will be 1, but the
+result 0 does not indicate that the value was not created as a table, only that
+the VM can distinguish the value from a table. A VM should not return 1 if
+using the value as a table will result in the VM crashing. \\
 \hline
-ValidThread & 1 & \ra i &\\
+ValidThread & 1 & \ra i & \validshpiel{a thread identifier} \\
 \hline
-ValidLock & 1 & \ra i\\
+ValidLock & 1 & \ra i & \validshpiel{a lock} \\
 \hline
 
 \hdr{Function and call-stack}
-Call & 2 & co &\\
+Call & 2 & co & Call the given function. The result is the result of the
+function's body, when evaluated with the value of the This register being the
+function value (that is, the first argument), and the value of the Arg register
+being the second argument. \\
 \hline
-Throw & 1 & & (no value)\\
+Throw & 1 & & See the Exceptions section. \\ % FIXME: write one :)
 \hline
 Catch & 2 & OO &\\
 \hline
@@ -76,27 +110,45 @@ Caught & 0 & &\\
 \hline
 
 \hdr{Behavioral}
-If & 3 & iOO &\\
+If & 3 & iOO & The first argument is evaluated. If its value is 0, then the
+third argument is evaluated and its result is the result of this If. Otherwise,
+the second argument is evaluated and its result is the result of this If. \\
 \hline
-While & 2 & IO &\\
+While & 2 & IO & In a loop:
+\begin{itemize}
+\item The first argument is evaluated.
+\item If its value is 0, the loop is terminated and the result of this While is
+the result of the most recent evaluation of the second argument; if the second
+argument has not yet been evaluated, the result of this While is Null with no
+primitive associated.
+\item The second argument is evaluated, and its result remembered.
+\end{itemize} \\
 \hline
-Seq & v & &\\
+Seq & * & & Each argument is evaluated in sequence. The result is the value of
+the last argument. (Seq must have at least one argument) \\
 \hline
 
 \hdr{Primitives}
-Associate & 2 & po\ra p &\\
+Associate & 2 & po\ra p & Results in the primitive value of the first argument
+associated with the object of the second argument. \\
 \hline
-Dissociate & 1 & p\ra o &\\
+Dissociate & 1 & p\ra o & Results in the object of the first argument with no
+primitive associated. Note that the equivalent for getting a dissociated
+primitive value is to associate it with Null. \\
 \hline
 
 \hdr{Strings}
-SConcat & 2 & ss\ra s &\\
+SConcat & 2 & ss\ra s & Given two strings, results in a new string which is the
+concatenation of the argument strings, associated with Null. \\
 \hline
-SLength & 1 & s\ra i &\\
+SLength & 1 & s\ra i & Results in the length of the argument string as an
+integer, associated with Null. \\
 \hline
-SSlice & 3 & sii\ra s &\\
+SSlice & 3 & sii\ra s & Similar to Slice, but slicing over bytes in a string
+instead of fields in an object. \\ % FIXME: this description sucks
 \hline
-SEqual & 2 & ss\ra i &\\
+SEqual & 2 & ss\ra i & Results in the integer value 1 if the two strings are
+equal, 0 otherwise. In either case the value is associated with Null. \\
 \hline
 
 \hdr{Integers}

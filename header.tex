@@ -13,5 +13,11 @@
 \newcommand{\beginlongtable}[1]{\begin{longtable}{#1}}
 \newcommand{\eendlongtable}{\end{longtable}}
 
+\newcommand{\validshpiel}[1]{Will result in the integer 1 or 0, in either case
+associated with Null. If the value of the argument was created as #1, the
+result will be 1, but the result 0 does not indicate that the value was not
+created as #1, only that the VM can distinguish the value from #1.  A VM should
+not return 1 if using the value as #1 will result in the VM crashing.}
+
 \parindent 1cm
 \parskip 0.2cm
