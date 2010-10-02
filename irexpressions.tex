@@ -155,49 +155,97 @@ SEqual & 2 & ss\ra i & Results in the integer value 1 if the two strings are
 equal, 0 otherwise. In either case the value is associated with Null. \\
 \hline
 SToInteger & 1 & s\ra i & Result is the integer value of the string argument,
-interpreted as a decimal ASCII number. \\
+interpreted as a decimal ASCII number, associated with Null. \\
 \hline
 SToIntegerT & 1 & s\ra 1 & See the Fythe transform engine's documentation. \\
 \hline
 
 \hdr{Integers}
-IWidth & 0 & \ra i &\\
+IWidth & 0 & \ra i & Result is the width, in bits, of a traditional signed
+2s-compliment integer capable which integers provided by the VM are capable of
+representing. For instance, if the VM actually uses 2s-compliment integers, the
+result is simply the width of integers it uses. If the VM uses something else
+(e.g. floating-point numbers), the result is a conservative estimate of their
+usable width as 2s-compliment integers. The result is associated with Null. \\
 \hline
-IMul & 2 & ii\ra i &\\
+IMul & 2 & ii\ra i & Result is the integer values of the two arguments
+multiplied together. If this overflows the VM's representation of integers, the
+result is implementation-defined. The result is associated with Null. \\
 \hline
-IDiv & 2 & ii\ra i &\\
+IDiv & 2 & ii\ra i & Result is the integer value of the first arguments divided
+by the integer value of the second argument, truncated. The result is
+associated with Null. \\
 \hline
-IMod & 2 & ii\ra i &\\
+IMod & 2 & ii\ra i & Result is remainder after dividing the integer value of
+the first arguments by the integer value of the second argument. If either
+argument is negative, the integer result is implementation-defined. The result
+is associated with Null. \\
 \hline
-IAdd & 2 & ii\ra i &\\
+IAdd & 2 & ii\ra i & Result is the sum of the integer values of the arguments.
+If this overflows the VM's representation of integers, the result is
+implementation-defined. The result is associated with Null. \\
 \hline
-ISub & 2 & ii\ra i &\\
+ISub & 2 & ii\ra i & Result is the integer value of the second argument
+subtracted from the integer value of the first argument. If this overflows the
+VM's representation of integers, the result is implementation-defined. The
+result is associated with Null. \\
 \hline
-ISl & 2 & ii\ra i &\\
+ISl & 2 & ii\ra i & Result is the integer value of the first argument times
+(two to the power of the integer value of the second argument), decimal
+truncated. If this overflows the VM's representation of integers, the result is
+implementation-defined. The result is associated with Null. \\
 \hline
-ISr & 2 & ii\ra i &\\
+ISr & 2 & ii\ra i & Result is the integer value of the first argument times
+(two to the power of the negated integer value of the second argument), decimal
+truncated. If this overflows the VM's representation of integers, the result is
+implementation-defined. The result is associated with Null. \\
 \hline
-INot & 1 & i\ra i &\\
+INot & 1 & i\ra i & If the argument's integer value is 0, the result is the
+integer value 1. Otherwise the result is the integer value 0. In either case,
+the result is associated with Null. \\
 \hline
-IOr & 2 & ii\ra i &\\
+IOr & 2 & ii\ra i & If the integer values of both arguments are 0, the result
+is the integer value 0. Otherwise the result is the integer value 1. In either
+case, the result is associated with Null. \\
 \hline
-IAnd & 2 & ii\ra i &\\
+IAnd & 2 & ii\ra i & If the integer values of both arguments are 1, the result
+is the integer value 1. Otherwise the result is the integer value 0. In either
+case, the result is associated with Null. \\
 \hline
-IByte & 1 & i\ra s &\\
+IByte & 1 & i\ra s & The result is a string, of length one, the value of the
+first byte of which is the integer value of the first argument. If the first
+argument has a value less than 0 or greater than 255, then the result is
+implementation-defined. The result is associated with Null. \\
 \hline
-IEqual & 2 & ii\ra i &\\
+IEqual & 2 & ii\ra i & If the integer values of both arguments are equal, the
+result is the integer value 1. Otherwise the result is the integer value 0. In
+either case, the result is associated with Null. \\
 \hline
-INe & 2 & ii\ra i &\\
+INe & 2 & ii\ra i & If the integer values of both arguments are not equal, the
+result is the integer value 1. Otherwise the result is the integer value 0. In
+either case, the result is associated with Null. \\
 \hline
-ILt & 2 & ii\ra i &\\
+ILt & 2 & ii\ra i & If the integer value of the first argument is strictly less
+than the integer value of the second argument, the result is the integer value
+1. Otherwise the result is the integer value 0. In either case, the result is
+associated with Null. \\
 \hline
-ILte & 2 & ii\ra i &\\
+ILte & 2 & ii\ra i & If the integer value of the first argument is strictly
+less than the integer value of the second argument, the result is the integer
+value 1. Otherwise the result is the integer value 0. In either case, the
+result is associated with Null. \\
 \hline
-IGt & 2 & ii\ra i &\\
+IGt & 2 & ii\ra i & If the integer value of the first argument is strictly less
+than the integer value of the second argument, the result is the integer value
+1. Otherwise the result is the integer value 0. In either case, the result is
+associated with Null. \\
 \hline
-IGte & 2 & ii\ra i &\\
+IGte & 2 & ii\ra i & If the integer value of the first argument is strictly
+less than the integer value of the second argument, the result is the integer
+value 1. Otherwise the result is the integer value 0. In either case, the
+result is associated with Null. \\
 \hline
-IToFloat & 1 & i\ra f &\\
+IToFloat & 1 & i\ra f & \\
 \hline
 
 \hdr{Floats}
