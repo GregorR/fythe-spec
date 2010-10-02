@@ -5,8 +5,14 @@ object reference associated optionally with a primitive value. A primitive
 value is a string, function, integer, floating-point number, or
 implementation-specific primitive. All primitives are immutable. An object is
 an array of values; that is, a set of values indexed by keys which range from 0
-to the size of the object, exclusively. There are several special objects,
-notably Null, which is a particular object of size 0 used as a nonce.
+to the size of the object, exclusively. There are three special objects: Null,
+which is an object of size 0 used as a nonce; Global, which is to be used as a
+global data store; and Version, which stores implementation-specific platform,
+version and feature information. There are also three registers, the values of
+which are specific to a given context. Two registers are specific to a function
+call: This, which is initially the function itself; and Arg, which is the
+argument passed to the function. One register, Caught, is specific to the Catch
+context, and will be described in the Exceptions section. % FIXME: do so
 
 The IR is a tree, formed by Fythe values. Although there is no canonical syntax
 for Fythe values, this specification uses LISP-like list expressions,
