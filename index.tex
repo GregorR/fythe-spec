@@ -1,0 +1,13 @@
+% This is only for use with htlatex
+
+\documentclass{report}
+\input{header.tex}
+
+% Geometry for HTML is irrelevant
+
+% However, we can't use the longtable environment (nor do we need to)
+\renewcommand{\beginlongtable}[1]{\begin{tabular}{#1}}
+\renewcommand{\eendlongtable}{\end{tabular}}
+\renewcommand{\endhead}{}
+
+\input{spec.tex}
