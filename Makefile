@@ -22,7 +22,7 @@ hgversion:
 
 .tex.html:
 	htlatex $< && htlatex $<
-	perl -pe 's/white-space:nowrap//g' -i $@
+	perl -pe 's/white-space:nowrap//g ; s/<title>/<title>Fythe Specification/' -i $@
 
 x: letter.pdf
 	xdg-open letter.pdf
