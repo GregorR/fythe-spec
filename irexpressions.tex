@@ -29,6 +29,10 @@ Null & 0 & & Evaluates to Null, with no primitive associated. \\
 \hline
 Global & 0 & & Evaluates to Global, with no primitive associated. \\
 \hline
+ExpandGlobal & 1 & i\ra i & Replaces Global with a new object, the size of which is
+the original size of Global plus the supplied integer argument. Evaluates to
+the old size of Global. \\
+\hline
 Version & 0 & & Evaluates to Version, with no primitive associated. \\
 \hline
 New & 1 & i & A new object, the size of which is specified by the first
@@ -339,7 +343,7 @@ Include & 1 & s\ra s & (or a throw for failure)\\
 \hline
 Parse & 2 & ss &\\
 \hline
-Transform & 1 & s & (should always return code, but this is a property of the transforms and so not guaranteed)\\
+Transform & 1 & & (should always return code, but this is a property of the transforms and so not guaranteed)\\
 \hline
 
 \hdr{Grammar}

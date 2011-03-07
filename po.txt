@@ -3,22 +3,24 @@ other object model should correspond to such that code using conflicting object
 models can at least possibly interact. The PO model insists only that objects
 have at least one member, and that the first member points to a "structure"
 object which contains the following members (in this order):
+ * structure
  * opMember
  * opMemberSet
  * toString
 
-opMember is a function taking two arguments: The object itself and the name of
-the member to access. It should return the value of the member if present or
-throw an exception if not present or inaccessible. opMemberSet is a function
-taking three arguments: The object itself, the member to set, and the value to
-set it to. It should throw an exception if this fails, otherwise its return
-should be ignored. toString is a function taking one argument, the object,
-which converts the object to a string of some form. The structure object may
-contain more elements, only the first three must be defined like this.
+structure is the structure's structure (for reflective purposes). opMember is a
+function taking two arguments: The object itself and the name of the member to
+access. It should return the value of the member if present or throw an
+exception if not present or inaccessible. opMemberSet is a function taking
+three arguments: The object itself, the member to set, and the value to set it
+to. It should throw an exception if this fails, otherwise its return should be
+ignored. toString is a function taking one argument, the object, which converts
+the object to a string of some form. The structure object may contain more
+elements, only the first three must be defined like this.
 
 (PO.HeaderSize)                         => 3
-(PO.New sz struct)                      => (Seq (Seq (TempSet *0 (New (Add 1 sz))) (MemberSet (Temp *0) 0 struct)) (Temp *0))
+(PO.New sz struct)                      => (Seq (Seq (TempSet *0 (New (IAdd 1 sz))) (MemberSet (Temp *0) 0 struct)) (Temp *0))
 (PO.Structure obj)                      => (Member obj 0)
-(PO.Member obj name)                    => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 0) (Array (Temp *0) name)))
-(PO.MemberSet obj name val)             => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 1) (Array (Temp *0) name val)))
-(PO.ToString obj)                       => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 2) (Array (Temp *0))))
+(PO.Member obj name)                    => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 1) (Array (Temp *0) name)))
+(PO.MemberSet obj name val)             => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 2) (Array (Temp *0) name val)))
+(PO.ToString obj)                       => (Seq (TempSet *0 obj) (Call (Member (PO.Structure (Temp *0)) 3) (Array (Temp *0))))
