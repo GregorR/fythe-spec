@@ -79,11 +79,13 @@ Temp & 1 & i & See the Temporaries section. \\ % FIXME: make one :)
 TempSet & 2 & io &\\
 \hline
 
-\hdr{Type detection\footnote{There is \textit{no} correct behavior for these
-functions, they are purely heuristic. That is, any implementation is allowed to
-produce incorrect results if it cannot distinguish between types; proper type
-management is the responsibility of the programmer or language implementer, not
-Fythe.}}
+\hdr{Type detection\footnote{These functions are purely heuristic. Although
+they must evaluate to 1 for any correctly-typed value, they may also evaluate
+to 1 for other values, although the result of using these values as the
+indicated type is undefined. That is, any implementation is allowed to produce
+incorrect results in the form of false negatives if, for instance, it cannot
+distinguish between types; proper type management is the responsibility of the
+programmer or language implementer, not Fythe.}}
 ValidString & 1 & \ra i & \validshpiel{a string} \\
 \hline
 ValidFunction & 1 & \ra i & \validshpiel{a function} \\
@@ -166,11 +168,13 @@ SToIntegerT & 1 & s\ra 1 & See the Fythe transform engine's documentation. \\
 
 \hdr{Integers}
 IWidth & 0 & \ra i & Result is the width, in bits, of a traditional signed
-2s-compliment integer capable which integers provided by the VM are capable of
-representing. For instance, if the VM actually uses 2s-compliment integers, the
-result is simply the width of integers it uses. If the VM uses something else
-(e.g. floating-point numbers), the result is a conservative estimate of their
-usable width as 2s-compliment integers. The result is associated with Null. \\
+2s-compliment which integers provided by the VM are capable of representing.
+For instance, if the VM actually uses 2s-compliment integers, the result is
+simply the width of integers it uses. If the VM uses something else (e.g.
+floating-point numbers), the result is a conservative estimate of their usable
+width as 2s-compliment integers. The result is associated with Null. The
+behavior of integers when they do not overflow the size of such an integer is
+guaranteed to be correct. \\
 \hline
 IMul & 2 & ii\ra i & Result is the integer values of the two arguments
 multiplied together. If this overflows the VM's representation of integers, the
