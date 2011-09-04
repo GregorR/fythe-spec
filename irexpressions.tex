@@ -65,7 +65,7 @@ object's fields, and the values of the new object's fields $[N..N+M-1]$ are set
 to values of the second argument object's fields. Result is the new object,
 with no primitive associated. \\
 \hline
-ConcatT & 2 & & See the Fythe transform engine's documentation. \\
+ConcatT & 2 & & See chapter~\ref{chap:transformer}. \\
 \hline
 Slice & 3 & oii & Given an object and two indexes X and Y, creates a new object
 of size $Y-X$. The values of the new object's fields $[0..Y-X]$ are set to the
@@ -163,7 +163,7 @@ equal, 0 otherwise. In either case the value is associated with Null. \\
 SToInteger & 1 & s\ra i & Result is the integer value of the string argument,
 interpreted as a decimal ASCII number, associated with Null. \\
 \hline
-SToIntegerT & 1 & s\ra 1 & See the Fythe transform engine's documentation. \\
+SToIntegerT & 1 & s\ra 1 & See chapter~\ref{chap:transformer}. \\
 \hline
 
 \hdr{Integers}
@@ -355,22 +355,26 @@ PCas & 4 & oipp\ra i & (only compares and swaps the primitive, not the object)\\
 \hline
 
 \hdr{Runtime}
-Include & 1 & s\ra s & (or a throw for failure)\\
+Include & 1 & s\ra s & The result is the content of the file named by the first
+argument. How the file is found and read is implementation-defined. A typical
+Fythe interpreter should have a pre-determined list of search paths. If the
+file does not exist, can't be read, or any implementation-defined error occurs,
+the result is Null. \\
 \hline
-Parse & 5 & siiss &\\
+Parse & 5 & siiss & See chapter~\ref{chap:parser}. \\
 \hline
-Transform & 1 & & (should always return code, but this is a property of the transforms and so not guaranteed)\\
+Transform & 1 & & See chapter~\ref{chap:transformer}. \\
 \hline
 
-\hdr{Grammar}
+\hdr{Grammar\footnote{For the behavior of these expressions, see chapter~\ref{chap:parser}.}}
 GAdd & 3 & soo\ra s &\\
 \hline
 GRem & 1 & s\ra s &\\
 \hline
-GCommit & 0 & & (always returns Null)\\
+GCommit & 0 & &\\
 \hline
 
-\hdr{Transform}
+\hdr{Transform\footnote{For the behavior of these expressions, see chapter~\ref{chap:transformer}.}}
 TAddPhase & 2 & ss\ra i &\\
 \hline
 TAddTree & 3 & soo\ra i &\\
