@@ -253,7 +253,9 @@ less than the integer value of the second argument, the result is the integer
 value 1. Otherwise the result is the integer value 0. In either case, the
 result is associated with Null. \\
 \hline
-IToFloat & 1 & i\ra f & \\
+IToFloat & 1 & i\ra f & The integer value is converted to a float value. Due to
+conflicting ranges of integers and floats, this conversion may lose
+precision. \\
 \hline
 
 \hdr{Floats}
@@ -283,15 +285,27 @@ FToInteger & 1 & f\ra i &\\
 \hline
 
 \hdr{Tables}
-MInit & 2 & oi & (always returns (Null))\\
+MInit & 2 & oi & The index specified by the second argument in the object
+specified by the first argument is initialized as a mapping of strings to
+values. Note that the content of both the object and primitive parts of a field
+being used as a mapping are implementation-defined. \\
 \hline
-MGet & 3 & ois & (table must be in an array index, uninitialized index is fine)\\
+MGet & 3 & ois & The result is the value associated with the string specified
+by the third argument in the mapping specified by the first two arguments
+(object and index). If the string is not contained in the mapping, the result
+is Null. \\
 \hline
-MSet & 4 & oiso &\\
+MSet & 4 & oiso & Updates or sets the value associated with the string
+specified by the third argument to the fourth argument, in the mapping
+specified by the first two arguments (object and index). Result is the fourth
+argument. \\
+\hline MList & 2 & oi & Results in a new object which is an array of every
+string contained in the mapping specified by the arguments (object and index),
+with each string associated with Null. \\
 \hline
-MList & 2 & oi &\\
-\hline
-MContains & 3 & ois\ra i &\\
+MContains & 3 & ois\ra i & If the mapping specified by the first two arguments
+(object and index) has a value associated with the string specified by the
+third argument, the result is the integer 1. Otherwise, the result is 0. \\
 \hline
 
 \hdr{Threading}
