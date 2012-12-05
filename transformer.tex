@@ -1,3 +1,21 @@
 \chapter{The Transform and Macro Engine}\label{chap:transformer}
 
-(Yet to be written)
+The Fythe parser is free to produce any tree of objects, not only those
+conforming to the Fythe IR. This is so that concerns such as binding,
+optimization and analysis may be offloaded to separate phases, in the transform
+and macro engine.
+
+Fundamentally, the transform engine works by running transforms in a number of
+\textit{phases} in order. Each phase has a number of \textit{transforms}. Each
+transform consists of a \textit{pattern} to match in the input tree, and either
+an output tree, or a function to produce an output tree. New phases are added
+by specifying a predecessor phase; i.e., a new phase is always inserted
+immediately after an existing phase. Transforms are added to phases in the
+order they are encountered in code, and executed in the reverse of that order.
+
+At least one phase exists before user code executes, with the name
+\texttt{Parsing}. This phase contains no transforms, and is always the earliest
+phase. Parsing is not actually performed by the ``Parsing'' phase, the name is
+chosen simply to represent the beginning of transformation, which is the end of
+parsing. An implementation may choose to include additional phases, which
+should, by convention, have names beginning with \texttt{Impl.}.
